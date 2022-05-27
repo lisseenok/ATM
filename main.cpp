@@ -1,7 +1,10 @@
-#include <iostream>
+#include "Application.h"
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+
+int main()
+{
+    Application app;
+    app.buildTreeObjects();
+    app.enterConnections();
+    app.execApp();
 }
-
