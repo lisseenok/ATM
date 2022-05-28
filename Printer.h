@@ -9,7 +9,6 @@ class Printer:public Base
 {
 public:
     Printer(Base* parent, string name):Base(parent, name, 6){};
-    void signal(string &str);
-    void handler(string str);
+    void handlerTurnOff(string str);
 };
 #endif

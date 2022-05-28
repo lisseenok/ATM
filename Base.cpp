@@ -227,60 +227,7 @@ int Base::getNumber()
     return number;
 }
 
-TYPE_SIGNAL Base::getSignalPtr()
-// возвращает указатель на нужный метод signal
-{
-    TYPE_SIGNAL sig;
-    switch(getNumber())
-    {
-        case 1:
-            sig = SIGNAL_D(Application::signal);
-            break;
-        case 2:
-            sig = SIGNAL_D(Cl2::signal);
-            break;
-        case 3:
-            sig = SIGNAL_D(Cl3::signal);
-            break;
-        case 4:
-            sig = SIGNAL_D(Cl4::signal);
-            break;
-        case 5:
-            sig = SIGNAL_D(Cl5::signal);
-            break;
-        case 6:
-            sig = SIGNAL_D(Cl6::signal);
-            break;
-    }
-    return sig;
-}
 
-TYPE_HANDLER Base::getHandlerPtr()
-{
-    TYPE_HANDLER han;
-    switch(getNumber())
-    {
-        case 1:
-            han = HANDLER_D(Application::handler);
-            break;
-        case 2:
-            han = HANDLER_D(Cl2::handler);
-            break;
-        case 3:
-            han = HANDLER_D(Cl3::handler);
-            break;
-        case 4:
-            han = HANDLER_D(Cl4::handler);
-            break;
-        case 5:
-            han = HANDLER_D(Cl5::handler);
-            break;
-        case 6:
-            han = HANDLER_D(Cl6::handler);
-            break;
-    }
-    return han;
-}
 
 string Base::getPath()
 // возвращает полный путь

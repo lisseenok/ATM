@@ -1,194 +1,106 @@
 #include "Application.h"
-#include "Class1.h"
+#include "Console.h"
+#include "Identifier.h"
+#include "Issuancer.h"
+#include "Printer.h"
+#include "Receiver.h"
+#include "Reader.h"
+
 bool Application::buildTreeObjects()
+/**
+ * 1) построить дерево иерархии
+ * 2) установить связи сигналов и обработчиков между объектами
+ */
 {
-    // вместо имени родителя - путь
-    string path, childName;
-    int cl;
-    Base* parentPtr, *childPtr;
+    Reader *reader = new Reader(this, "reader"); // Объект для чтения команд и данных
+    Console *console = new Console(this, "console"); // Объект пульта управления, для отработки нажатия кнопок (команд)
+    Identifier *identifier = new Identifier(this, "identifier"); // Объект, моделирующий устройства идентификации банковской карты
+    Receiver *receiver = new Receiver(this, "receiver"); // Объект, моделирующий устройства приема денег
+    Issuancer *issuancer = new Issuancer(this, "issuancer"); // Объект, моделирующий устройства выдачи денег
+    Printer *printer = new Printer(this, "printer"); // Объект для вывода состояния или результата операции банкомата на консоль.
 
-    cin >> path;
+    // установка связей
+    TYPE_SIGNAL signal;
+    TYPE_HANDLER handler;
 
-    setName(path);
-    parentPtr = this;
+    // signals application
+    signal = SIGNAL_D(Application::signalReadNewCommand);
+    handler = HANDLER_D(Reader::handlerReadNewCommand);
+    setConnection(reader, signal, handler);
 
-    while (true)
-    {
-        cin >> path; // считываем путь к родителю
-        if (path == "endtree")
-        {
-            cout << "Object tree";
-            print("");
-            return true; // дерево построенно и все хорошо
-        }
+    signal = SIGNAL_D(Application::signalSetUp);
+    handler = HANDLER_D(Reader::handlerSetUp);
+    setConnection(reader, signal, handler);
 
-        cin >> childName >> cl;
+    // signals reader
+    signal = SIGNAL_D(Reader::signalConsole);
+    handler = HANDLER_D(Console::handlerText);
+    reader->setConnection(console, signal, handler);
 
-        parentPtr = getByPath(path); // находим родителя по пути и присваиваем parentPtr
+    signal = SIGNAL_D(Reader::signalAddUser);
+    handler = HANDLER_D(Application::handlerAddUser);
+    reader->setConnection(this, signal, handler);
 
-        if (!parentPtr)
-        {
-            // произошла ошибка в построении дерева
-            // (по заданной координате головной объект не найден)
-            // например ошибка в наименовании или объекта еще нет в дереве
-            cout << "Object tree";
-            print("");
-            cout << endl << "The head object " << path << " is not found";
-            return false;
-        }
+    signal = SIGNAL_D(Reader::signalAddMoney);
+    handler = HANDLER_D(Application::handlerAddMoney);
+    reader->setConnection(this, signal, handler);
 
-        switch (cl)
-        {
-            case 2:
-                childPtr = new Cl2(parentPtr, childName);
-                break;
-            case 3:
-                childPtr = new Cl3(parentPtr, childName);
-                break;
-            case 4:
-                childPtr = new Cl4(parentPtr, childName);
-                break;
-            case 5:
-                childPtr = new Cl5(parentPtr, childName);
-                break;
-            case 6:
-                childPtr = new Cl6(parentPtr, childName);
-                break;
-        }
-    }
+    // signals console
+    signal = SIGNAL_D(Console::signalReadNewCommand);
+    handler = HANDLER_D(Reader::handlerReadNewCommand);
+    console->setConnection(reader, signal, handler);
+
+    signal = SIGNAL_D(Console::signalPrintTurnOff);
+    handler = HANDLER_D(Printer::handlerTurnOff);
+    console->setConnection(printer, signal, handler);
+
+    return true;
 
 }
 
 int Application::execApp()
+/**
+ * 1) привести все объекты в состояние готовности
+ * 2) цикл для обработки вводимых данных для загрузки банкомата
+ *       - выдача сигнала объекту для ввода данных
+ *       - отработка операции загрузки
+   3) цикл для обработки вводимых команд банкомата
+        - выдача сигнала объекту для ввода команды
+        - отработка команды
+   4) после ввода команды «Turn off the ATM» завершить работу
+ */
+
 {
+    emitSignal((TYPE_SIGNAL)(&Application::signalSetUp));
 
-    string command;
-
-    while (true)
-    {
-        cin >> command;
-        if (command == "END")
-            return 0;
-
-
-        if (command == "EMIT")
-        {
-            string path, text;
-            cin >> path;
-            getline(cin, text);
-            if (getByPath(path))
-            {
-                Base* obj = getByPath(path);
-                obj->emitSignal(obj->getSignalPtr(), text);
-            } else {
-                cout << endl << "Object " << path << " not found";
-            }
-            continue;
-        }
-        if (command == "SET_CONNECT")
-            // установка связи
-        {
-            string pathFrom, pathTo;
-            cin >> pathFrom >> pathTo;
-            if (getByPath(pathFrom))
-            {
-                if (getByPath(pathTo))
-                {
-                    getByPath(pathFrom)->setConnection(getByPath(pathTo), getByPath(pathFrom)->getSignalPtr(), getByPath(pathTo)->getHandlerPtr());
-                } else {
-                    cout << endl << "Handler object " << pathTo << " not found";
-                }
-            } else {
-                cout << endl << "Object " << pathFrom << " not found";
-            }
-        }
-
-        if (command == "DELETE_CONNECT")
-            // удаление
-        {
-            string pathFrom, pathTo;
-            cin >> pathFrom >> pathTo;
-            if (getByPath(pathFrom))
-            {
-                if (getByPath(pathTo))
-                {
-                    getByPath(pathFrom)->deleteConnection(getByPath(pathTo), getByPath(pathFrom)->getSignalPtr(), getByPath(pathTo)->getHandlerPtr());
-                } else {
-                    cout << endl << "Handler object " << pathTo << " not found";
-                }
-            } else {
-                cout << endl << "Object " << pathFrom << " not found";
-            }
-        }
-        if (command == "SET_CONDITION")
-            // установка готовности объекта
-        {
-            string path;
-            cin >> path;
-            int state;
-            cin >> state;
-            if (getByPath(path))
-            {
-                getByPath(path)->setState(state);
-            } else cout << endl << "Object " << path << " not found";
-        }
-    }
+    emitSignal((TYPE_SIGNAL)(&Application::signalReadNewCommand));
     return 0;
 }
 
-/**
-int Application::execApp()
-{
 
-	string path, command;
-
-	while (true)
-	{
-		cin >> command;
-		if (command == "END")
-			return 0;
-
-		cin >> path;
-
-		if (command == "FIND")
-		{
-			cout << endl << path; // выводим путь
-			if (getByPath(path)) // если такой объект есть - находим его
-				cout << "     Object name: " << getByPath(path)->getName();
-			else
-				cout << "     Object is not found";  // не найден
-		}
-
-		if (command == "SET")
-		{
-			if (getByPath(path)) // если такой объект есть
-			{
-				setCurrent(getByPath(path)); // устанавливаем его как текущий
-				cout << endl << "Object is set: " << getCurrent()->getName(); // выводим
-			} else
-			{
-				cout << endl << "Object is not found: " << getCurrent()->getName() << " " << path;
-				continue;
-			}
-		}
-	}
-	return 0;
+void Application::handlerAddUser(string str) {
+    string card = str.substr(0, 19);
+    string pin = str.substr(20, 4);
+    int balance = stoi(str.substr(25));
+    users.push_back({card, pin, balance});
 }
-*/
 
-// new
-void Application::enterConnections()
-{
-    string from, to;
-    while (true)
-    {
-        cin >> from;
-        if (from == "end_of_connections")
-        {
-            return;
-        }
-        cin >> to;
-        getByPath(from)->setConnection(getByPath(to), getByPath(from)->getSignalPtr(), getByPath(to)->getHandlerPtr());
-    }
+void Application::handlerAddMoney(string str) {
+    money.amountOf5000 = stoi(str.substr(0, str.find(' ')));
+    str = str.substr(str.find(' ') + 1);
+
+    money.amountOf2000 = stoi(str.substr(0, str.find(' ')));
+    str = str.substr(str.find(' ') + 1);
+
+    money.amountOf1000 = stoi(str.substr(0, str.find(' ')));
+    str = str.substr(str.find(' ') + 1);
+
+    money.amountOf500 = stoi(str.substr(0, str.find(' ')));
+    str = str.substr(str.find(' ') + 1);
+
+    money.amountOf100 = stoi(str);
+
+
 }
+
 

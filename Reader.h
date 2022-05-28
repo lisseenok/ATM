@@ -6,11 +6,17 @@
 После чтения очередной порции данных для настройки или данных команды, объект выдает сигнал с текстом полученных данных. 
 Все данные настройки и данные команды синтаксический корректны.
 */
+
 class Reader:public Base
 {
 public:
-    Reader(Base* parent, string name):Base(parent, name, 2){};
-    void signal(string &str);
-    void handler(string str);
+    Reader(Base* parent, string name):Base(parent, name, 2){}
+
+    void signalConsole(string &str){}
+    void signalAddUser(string &str){}
+    void signalAddMoney(string &str){}
+
+    void handlerReadNewCommand(string str);
+    void handlerSetUp(string str);
 };
 #endif

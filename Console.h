@@ -8,9 +8,14 @@
 */
 class Console:public Base
 {
+    bool isAuth = false; // обработать при правильном пин коде (сигнал от идентификатора)
+    string currentCard;
+
+
 public:
-    Console(Base* parent, string name):Base(parent, name, 3){};
-    void signal(string &str);
-    void handler(string str);
+    Console(Base* parent, string name):Base(parent, name, 3){}
+    void signalReadNewCommand(string &str){} // сигнал чтобы ридер считал новую строчку
+    void signalPrintTurnOff(string &str){} // сигнал вывода выключения
+    void handlerText(string str);
 };
 #endif

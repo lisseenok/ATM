@@ -14,8 +14,8 @@ typedef void (Base::*TYPE_SIGNAL)(string &);
 typedef void (Base::*TYPE_HANDLER)(string);
 
 // каст к TYPE_SIGNAL и TYPE_HANDLER
-#define SIGNAL_D(signal) (TYPE_SIGNAL)(&signal);
-#define HANDLER_D(handler) (TYPE_HANDLER)(&handler);
+#define SIGNAL_D(s) (TYPE_SIGNAL)(&s);
+#define HANDLER_D(h) (TYPE_HANDLER)(&h);
 
 class Base
 {
@@ -34,6 +34,8 @@ class Base
     vector<Base*> children;
     int state;
     Base* current;
+
+    int mode = 0; // 0 - обычный, 1 - режим авторизации, режим депозита
 public:
     Base(Base* parent, string name="", int number = 1);
     ~Base();
@@ -56,19 +58,9 @@ public:
     // new
     void setConnection(Base* c, TYPE_SIGNAL s, TYPE_HANDLER h);
     void deleteConnection(Base* c, TYPE_SIGNAL s, TYPE_HANDLER h);
-    void emitSignal(TYPE_SIGNAL s, string str);
-    TYPE_SIGNAL getSignalPtr();
-    TYPE_HANDLER getHandlerPtr();
+    void emitSignal(TYPE_SIGNAL s, string str="");
     int getNumber();
     string getPath();
-    void setConnection();
-    void deleteConnection();
-
-
-
-
-
-
 
 
 };
