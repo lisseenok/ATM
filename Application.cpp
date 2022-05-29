@@ -12,6 +12,9 @@ bool Application::buildTreeObjects()
  * 2) установить связи сигналов и обработчиков между объектами
  */
 {
+    /**
+     INITIALIZING OBJECTS
+     */
     Reader *reader = new Reader(this, "reader"); // Объект для чтения команд и данных
     Console *console = new Console(this, "console"); // Объект пульта управления, для отработки нажатия кнопок (команд)
     Identifier *identifier = new Identifier(this, "identifier"); // Объект, моделирующий устройства идентификации банковской карты
@@ -19,11 +22,13 @@ bool Application::buildTreeObjects()
     Issuancer *issuancer = new Issuancer(this, "issuancer"); // Объект, моделирующий устройства выдачи денег
     Printer *printer = new Printer(this, "printer"); // Объект для вывода состояния или результата операции банкомата на консоль.
 
-    // установка связей
+    /**
+     SETTING CONNECTIONS
+     */
     TYPE_SIGNAL signal;
     TYPE_HANDLER handler;
 
-    // signals application
+    // application's signals
     signal = SIGNAL_D(Application::signalReadNewCommand);
     handler = HANDLER_D(Reader::handlerReadNewCommand);
     setConnection(reader, signal, handler);
@@ -32,7 +37,11 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Reader::handlerSetUp);
     setConnection(reader, signal, handler);
 
-    // signals reader
+    signal = SIGNAL_D(Application::signalPrintCardBalance);
+    handler = HANDLER_D(Printer::handlerPrintCardBalance);
+    setConnection(printer, signal, handler);
+
+    // reader's signals
     signal = SIGNAL_D(Reader::signalConsole);
     handler = HANDLER_D(Console::handlerText);
     reader->setConnection(console, signal, handler);
@@ -45,7 +54,11 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Application::handlerAddMoney);
     reader->setConnection(this, signal, handler);
 
-    // signals console
+    signal = SIGNAL_D(Reader::signalPrintReadyToWork);
+    handler = HANDLER_D(Printer::handlerPrintReadyToWork);
+    reader->setConnection(printer, signal, handler);
+
+    // console's signals
     signal = SIGNAL_D(Console::signalReadNewCommand);
     handler = HANDLER_D(Reader::handlerReadNewCommand);
     console->setConnection(reader, signal, handler);
@@ -54,20 +67,40 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Printer::handlerTurnOff);
     console->setConnection(printer, signal, handler);
 
+    signal = SIGNAL_D(Console::signalPrintReadyToWork);
+    handler = HANDLER_D(Printer::handlerPrintReadyToWork);
+    console->setConnection(printer, signal, handler);
+
+    signal = SIGNAL_D(Console::signalPrintEnterPin);
+    handler = HANDLER_D(Printer::handlerPrintEnterPin);
+    console->setConnection(printer, signal, handler);
+
+    signal = SIGNAL_D(Console::signalPrintSelectTheCommand);
+    handler = HANDLER_D(Printer::handlerPrintSelectTheCommand);
+    console->setConnection(printer, signal, handler);
+
+    signal = SIGNAL_D(Console::signalDepositToCard);
+    handler = HANDLER_D(Application::handlerDepositToCard);
+    console->setConnection(this, signal, handler);
+
+    signal = SIGNAL_D(Console::signalReturnCardBalance);
+    handler = HANDLER_D(Application::handlerReturnCardBalance);
+    console->setConnection(this, signal, handler);
+
     return true;
 
 }
 
 int Application::execApp()
 /**
- * 1) привести все объекты в состояние готовности
- * 2) цикл для обработки вводимых данных для загрузки банкомата
+ * 1) привести все объекты в состояние готовности (done)
+ * 2) цикл для обработки вводимых данных для загрузки банкомата (done)
  *       - выдача сигнала объекту для ввода данных
  *       - отработка операции загрузки
    3) цикл для обработки вводимых команд банкомата
         - выдача сигнала объекту для ввода команды
         - отработка команды
-   4) после ввода команды «Turn off the ATM» завершить работу
+   4) после ввода команды «Turn off the ATM» завершить работу (done)
  */
 
 {
@@ -99,6 +132,23 @@ void Application::handlerAddMoney(string str) {
     str = str.substr(str.find(' ') + 1);
 
     money.amountOf100 = stoi(str);
+
+
+}
+
+void Application::handlerDepositToCard(string str) {
+    for (int i = 0; i < users.size(); ++i) {
+        if (users[i].card == str.substr(0, 19)) {
+            users[i].balance += stoi(str.substr(19));
+            cout << users[i].balance << endl;
+        }
+    }
+}
+
+void Application::handlerReturnCardBalance(string str) {
+    for (int i = 0; i < users.size(); ++i) {
+        if (users[i].card == str) emitSignal((TYPE_SIGNAL)(&Application::signalPrintCardBalance), to_string(users[i].balance));
+    }
 
 
 }

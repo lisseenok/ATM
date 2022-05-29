@@ -10,7 +10,7 @@ class Application:public Base
     {
         string card;
         string pin;
-        int balance;
+        int balance = 0;
     };
     vector<User> users;
 
@@ -29,10 +29,14 @@ public:
     int execApp();
 
 
+
     void signalReadNewCommand(string &str){}
     void signalSetUp(string &str){}
+    void signalPrintCardBalance(string &str){}
 
     void handlerAddUser(string str);
     void handlerAddMoney(string str);
+    void handlerDepositToCard(string str);
+    void handlerReturnCardBalance(string str);
 };
 #endif

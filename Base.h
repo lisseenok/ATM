@@ -35,7 +35,7 @@ class Base
     int state;
     Base* current;
 
-    int mode = 0; // 0 - обычный, 1 - режим авторизации, режим депозита
+    //int mode = 0; // 0 - обычный, 1 - режим авторизации, 2 - режим депозита
 public:
     Base(Base* parent, string name="", int number = 1);
     ~Base();

@@ -8,5 +8,10 @@ End card loading
 End money loading
 Deposit money 1000
 Identification 1001 2022 0021 0004
+PIN-code 5004
+Deposit money 1000
+Deposit money 1000
+Deposit money 50
+Deposit money to the card
 Turn off the ATM
 

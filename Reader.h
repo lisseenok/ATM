@@ -15,6 +15,7 @@ public:
     void signalConsole(string &str){}
     void signalAddUser(string &str){}
     void signalAddMoney(string &str){}
+    void signalPrintReadyToWork(string &str){}
 
     void handlerReadNewCommand(string str);
     void handlerSetUp(string str);
