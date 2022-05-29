@@ -37,9 +37,10 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Reader::handlerSetUp);
     setConnection(reader, signal, handler);
 
-    signal = SIGNAL_D(Application::signalPrintCardBalance);
-    handler = HANDLER_D(Printer::handlerPrintCardBalance);
+    signal = SIGNAL_D(Application::signalPrintMsg);
+    handler = HANDLER_D(Printer::handlerPrintMsg);
     setConnection(printer, signal, handler);
+
 
     // reader's signals
     signal = SIGNAL_D(Reader::signalConsole);
@@ -54,8 +55,8 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Application::handlerAddMoney);
     reader->setConnection(this, signal, handler);
 
-    signal = SIGNAL_D(Reader::signalPrintReadyToWork);
-    handler = HANDLER_D(Printer::handlerPrintReadyToWork);
+    signal = SIGNAL_D(Reader::signalPrintMsg);
+    handler = HANDLER_D(Printer::handlerPrintMsg);
     reader->setConnection(printer, signal, handler);
 
     // console's signals
@@ -67,25 +68,38 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Printer::handlerTurnOff);
     console->setConnection(printer, signal, handler);
 
-    signal = SIGNAL_D(Console::signalPrintReadyToWork);
-    handler = HANDLER_D(Printer::handlerPrintReadyToWork);
+    signal = SIGNAL_D(Console::signalPrintMsg);
+    handler = HANDLER_D(Printer::handlerPrintMsg);
     console->setConnection(printer, signal, handler);
 
-    signal = SIGNAL_D(Console::signalPrintEnterPin);
-    handler = HANDLER_D(Printer::handlerPrintEnterPin);
-    console->setConnection(printer, signal, handler);
+    signal = SIGNAL_D(Console::signalAddMoneyToDeposit);
+    handler = HANDLER_D(Receiver::handlerAddMoneyToDeposit);
+    console->setConnection(receiver, signal, handler);
 
-    signal = SIGNAL_D(Console::signalPrintSelectTheCommand);
-    handler = HANDLER_D(Printer::handlerPrintSelectTheCommand);
-    console->setConnection(printer, signal, handler);
+    signal = SIGNAL_D(Console::signalEndDeposit);
+    handler = HANDLER_D(Receiver::handlerEndDeposit);
+    console->setConnection(receiver, signal, handler);
 
-    signal = SIGNAL_D(Console::signalDepositToCard);
+    signal = SIGNAL_D(Console::signalWithdrawMoney);
+    handler = HANDLER_D(Issuancer::handlerWithdrawMoney);
+    console->setConnection(issuancer, signal, handler);
+
+
+    // receiver's signals
+    signal = SIGNAL_D(Receiver::signalDepositToCard);
     handler = HANDLER_D(Application::handlerDepositToCard);
-    console->setConnection(this, signal, handler);
+    receiver->setConnection(this, signal, handler);
 
-    signal = SIGNAL_D(Console::signalReturnCardBalance);
+    signal = SIGNAL_D(Receiver::signalReturnCardBalance);
     handler = HANDLER_D(Application::handlerReturnCardBalance);
-    console->setConnection(this, signal, handler);
+    receiver->setConnection(this, signal, handler);
+
+    signal = SIGNAL_D(Receiver::signalPrintMsg);
+    handler = HANDLER_D(Printer::handlerPrintMsg);
+    receiver->setConnection(printer, signal, handler);
+
+    // issuancer's signals
+
 
     return true;
 
@@ -140,17 +154,21 @@ void Application::handlerDepositToCard(string str) {
     for (int i = 0; i < users.size(); ++i) {
         if (users[i].card == str.substr(0, 19)) {
             users[i].balance += stoi(str.substr(19));
-            cout << users[i].balance << endl;
         }
     }
 }
 
 void Application::handlerReturnCardBalance(string str) {
     for (int i = 0; i < users.size(); ++i) {
-        if (users[i].card == str) emitSignal((TYPE_SIGNAL)(&Application::signalPrintCardBalance), to_string(users[i].balance));
+        if (users[i].card == str) emitSignal((TYPE_SIGNAL)(&Application::signalPrintMsg), "Card balance " + to_string(users[i].balance));
     }
 
+}
 
+void Application::handlerCheckBalance(string str) {
+    for (int i = 0; i < users.size(); ++i) {
+        if (users[i].card == str) emitSignal((TYPE_SIGNAL)(&Application::signalReturnCardBalance), to_string(users[i].balance));
+    }
 }
 
 

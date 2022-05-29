@@ -62,6 +62,8 @@ public:
     int getNumber();
     string getPath();
 
+    void signalPrintMsg(string &str){}
+
 
 };
 #endif

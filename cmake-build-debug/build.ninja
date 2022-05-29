@@ -108,6 +108,24 @@ build CMakeFiles/ATM.dir/Printer.cpp.o: CXX_COMPILER__ATM_Debug /Users/elizaveta
   OBJECT_DIR = CMakeFiles/ATM.dir
   OBJECT_FILE_DIR = CMakeFiles/ATM.dir
 
+build CMakeFiles/ATM.dir/Identifier.cpp.o: CXX_COMPILER__ATM_Debug /Users/elizavetacaplina/CLionProjects/avrora/ATM/Identifier.cpp || cmake_object_order_depends_target_ATM
+  DEP_FILE = CMakeFiles/ATM.dir/Identifier.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=12.0 -std=gnu++14
+  OBJECT_DIR = CMakeFiles/ATM.dir
+  OBJECT_FILE_DIR = CMakeFiles/ATM.dir
+
+build CMakeFiles/ATM.dir/Receiver.cpp.o: CXX_COMPILER__ATM_Debug /Users/elizavetacaplina/CLionProjects/avrora/ATM/Receiver.cpp || cmake_object_order_depends_target_ATM
+  DEP_FILE = CMakeFiles/ATM.dir/Receiver.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=12.0 -std=gnu++14
+  OBJECT_DIR = CMakeFiles/ATM.dir
+  OBJECT_FILE_DIR = CMakeFiles/ATM.dir
+
+build CMakeFiles/ATM.dir/Issuancer.cpp.o: CXX_COMPILER__ATM_Debug /Users/elizavetacaplina/CLionProjects/avrora/ATM/Issuancer.cpp || cmake_object_order_depends_target_ATM
+  DEP_FILE = CMakeFiles/ATM.dir/Issuancer.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=12.0 -std=gnu++14
+  OBJECT_DIR = CMakeFiles/ATM.dir
+  OBJECT_FILE_DIR = CMakeFiles/ATM.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target ATM
@@ -116,7 +134,7 @@ build CMakeFiles/ATM.dir/Printer.cpp.o: CXX_COMPILER__ATM_Debug /Users/elizaveta
 #############################################
 # Link the executable ATM
 
-build ATM: CXX_EXECUTABLE_LINKER__ATM_Debug CMakeFiles/ATM.dir/main.cpp.o CMakeFiles/ATM.dir/Application.cpp.o CMakeFiles/ATM.dir/Base.cpp.o CMakeFiles/ATM.dir/Reader.cpp.o CMakeFiles/ATM.dir/Console.cpp.o CMakeFiles/ATM.dir/Printer.cpp.o
+build ATM: CXX_EXECUTABLE_LINKER__ATM_Debug CMakeFiles/ATM.dir/main.cpp.o CMakeFiles/ATM.dir/Application.cpp.o CMakeFiles/ATM.dir/Base.cpp.o CMakeFiles/ATM.dir/Reader.cpp.o CMakeFiles/ATM.dir/Console.cpp.o CMakeFiles/ATM.dir/Printer.cpp.o CMakeFiles/ATM.dir/Identifier.cpp.o CMakeFiles/ATM.dir/Receiver.cpp.o CMakeFiles/ATM.dir/Issuancer.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=12.0
   OBJECT_DIR = CMakeFiles/ATM.dir
   POST_BUILD = :

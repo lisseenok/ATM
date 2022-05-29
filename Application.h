@@ -29,14 +29,15 @@ public:
     int execApp();
 
 
-
-    void signalReadNewCommand(string &str){}
-    void signalSetUp(string &str){}
-    void signalPrintCardBalance(string &str){}
+    void signalReadNewCommand(string &str){} // сигнал ридеру прочесть новую строку
+    void signalSetUp(string &str){} // сигнал ридеру для настройки банкомата
+    void signalPrintCardBalance(string &str){} // сигнал ридеру вывести баланс карты
+    void signalReturnCardBalance(string &str){}
 
     void handlerAddUser(string str);
     void handlerAddMoney(string str);
-    void handlerDepositToCard(string str);
-    void handlerReturnCardBalance(string str);
+    void handlerDepositToCard(string str); // обработчик, вносящий деньги на карту
+    void handlerReturnCardBalance(string str); // обработчик, передающий баланс карты
+    void handlerCheckBalance(string str);
 };
 #endif

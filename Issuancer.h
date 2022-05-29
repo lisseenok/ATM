@@ -11,7 +11,7 @@ class Issuancer:public Base
 {
 public:
     Issuancer(Base* parent, string name):Base(parent, name, 6){};
-    void signal(string &str);
-    void handler(string str);
+
+    void handlerWithdrawMoney(string str);
 };
 #endif

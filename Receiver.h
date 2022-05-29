@@ -10,9 +10,16 @@
 
 class Receiver:public Base
 {
+    int currentDeposit = 0;
 public:
     Receiver(Base* parent, string name):Base(parent, name, 5){};
-    void signal(string &str);
-    void handler(string str);
+
+    void signalDepositToCard(string &str) {}
+    void signalReturnCardBalance(string &str) {}
+    void signalPrintAmount(string &str) {}
+
+
+    void handlerAddMoneyToDeposit(string str); // добавление денег
+    void handlerEndDeposit(string str); // окончание депозита
 };
 #endif

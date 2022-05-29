@@ -21,5 +21,5 @@ void Reader::handlerSetUp(string str) {
 
     getline(cin, text);
 
-    emitSignal((TYPE_SIGNAL)(&Reader::signalPrintReadyToWork));
+    emitSignal((TYPE_SIGNAL)(&Reader::signalPrintMsg), "Ready to work");
 }

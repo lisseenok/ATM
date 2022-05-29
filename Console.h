@@ -11,7 +11,6 @@ class Console:public Base
     bool isAuth = false; // обработать при правильном пин коде (сигнал от идентификатора)
     string currentCard;
     bool depositMode = false;
-    int sumOfDeposits = 0;
 
 
 public:
@@ -21,9 +20,12 @@ public:
     void signalPrintReadyToWork(string &srt){} // сигнал для вывода "Ready to work"
     void signalPrintEnterPin(string &srt){} // сигнал для вывода "Enter the PIN code"
     void signalPrintSelectTheCommand(string &srt){} // сигнал для вывода "Select the command"
-    void signalDepositToCard(string &srt){} // сигнал для добавления суммы на баланс карты
-    void signalReturnCardBalance(string &srt){} // сигнал системе чтобы отправила баланс принтеру
 
-    void handlerText(string str);
+    void signalAddMoneyToDeposit(string &srt){} // сигнал ресиверу о внесении новой суммы
+    void signalEndDeposit(string &srt){} // сигнал ресиверу, о том, что внесение денег окончено
+    void signalWithdrawMoney(string &srt){} // сигнал для выдавателя денег
+    //void signalIdentifyCard(string &srt){}
+
+    void handlerText(string str); // обработчик команды
 };
 #endif

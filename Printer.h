@@ -9,10 +9,13 @@ class Printer:public Base
 {
 public:
     Printer(Base* parent, string name):Base(parent, name, 6){};
+    void handlerPrintMsg(string str);
     void handlerTurnOff(string str);
-    void handlerPrintReadyToWork(string str);
-    void handlerPrintEnterPin(string str);
-    void handlerPrintSelectTheCommand(string str);
-    void handlerPrintCardBalance(string str);
+
+//    void handlerPrintReadyToWork(string str);
+//    void handlerPrintEnterPin(string str);
+//    void handlerPrintSelectTheCommand(string str);
+//    void handlerPrintCardBalance(string str);
+//    void handlerPrintAmount(string str);
 };
 #endif
