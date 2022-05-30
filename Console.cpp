@@ -35,11 +35,7 @@ void Console::handlerText(string str) {
             }
             else if (command == "Withdraw")
             {
-                int intSum = stoi( str.substr(16));
-                string strSum =  str.substr(16);
-
-                if (intSum % 100 != 0) emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "The amount is not a multiple of 100");
-
+                emitSignal((TYPE_SIGNAL)(&Console::signalWithdrawMoney), currentCard + str.substr(15));
             }
         }
 

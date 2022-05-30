@@ -1,7 +1,3 @@
-//
-// Created by Елизавета Цаплина on 29.05.2022.
-//
-
 #include "Receiver.h"
 
 void Receiver::handlerAddMoneyToDeposit(string str) {

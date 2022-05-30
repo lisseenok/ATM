@@ -99,7 +99,9 @@ bool Application::buildTreeObjects()
     receiver->setConnection(printer, signal, handler);
 
     // issuancer's signals
-
+    signal = SIGNAL_D(Issuancer::signalWithdrawMoneyToApp);
+    handler = HANDLER_D(Application::handlerWithdrawMoneyToApp);
+    issuancer->setConnection(this, signal, handler);
 
     return true;
 
@@ -165,10 +167,30 @@ void Application::handlerReturnCardBalance(string str) {
 
 }
 
-void Application::handlerCheckBalance(string str) {
-    for (int i = 0; i < users.size(); ++i) {
-        if (users[i].card == str) emitSignal((TYPE_SIGNAL)(&Application::signalReturnCardBalance), to_string(users[i].balance));
+void Application::handlerWithdrawMoneyToApp(string str) {
+    string card = str.substr(0, 19);
+    int sum = stoi(str.substr(19));
+    if (sum > getCurrentSum()) {
+        emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "There is not enough money in the ATM");
+        return;
     }
+    for (int i = 0; i < users.size(); ++i) {
+        if (users[i].card == card)
+        {
+            if (users[i].balance < sum)
+            {
+                emitSignal((TYPE_SIGNAL)(&Application::signalPrintMsg), "There is not enough money on the card");
+                return;
+            }
+        }
+    }
+}
+
+int Application::getCurrentSum() {
+    /**
+     метод, возвращающий текущую сумму денег в банкомате
+     */
+    return money.amountOf100 * 100 + money.amountOf500 * 500 + money.amountOf1000 * 1000 + money.amountOf2000 * 2000 + money.amountOf5000 * 5000;
 }
 
 

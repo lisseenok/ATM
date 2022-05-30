@@ -27,6 +27,7 @@ public:
     Application(): Base(nullptr, ""){};
     bool buildTreeObjects(); // построение иерархии
     int execApp();
+    int getCurrentSum();
 
 
     void signalReadNewCommand(string &str){} // сигнал ридеру прочесть новую строку
@@ -38,6 +39,6 @@ public:
     void handlerAddMoney(string str);
     void handlerDepositToCard(string str); // обработчик, вносящий деньги на карту
     void handlerReturnCardBalance(string str); // обработчик, передающий баланс карты
-    void handlerCheckBalance(string str);
+    void handlerWithdrawMoneyToApp(string str);
 };
 #endif
