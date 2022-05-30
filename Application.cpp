@@ -184,6 +184,36 @@ void Application::handlerWithdrawMoneyToApp(string str) {
             }
         }
     }
+    vector<int> withdrawMoney = {0, 0, 0, 0, 0};
+    while (sum > 0)
+    {
+        if (sum >= 5000)
+        {
+            sum -= 5000;
+            withdrawMoney[0] += 1;
+        } else if (sum >= 2000)
+        {
+            sum -= 2000;
+            withdrawMoney[1] += 1;
+        } else if (sum >= 1000)
+        {
+            sum -= 1000;
+            withdrawMoney[2] += 1;
+        } else if (sum >= 500)
+        {
+            sum -= 500;
+            withdrawMoney[3] += 1;
+        } else if (sum >= 100)
+        {
+            sum -= 100;
+            withdrawMoney[4] += 1;
+        }
+    }
+    cout << withdrawMoney[0] << endl;
+    cout << withdrawMoney[1] << endl;
+    cout << withdrawMoney[2] << endl;
+    cout << withdrawMoney[3] << endl;
+    cout << withdrawMoney[4] << endl;
 }
 
 int Application::getCurrentSum() {

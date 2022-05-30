@@ -13,6 +13,6 @@ Deposit money 1000
 Deposit money 1000
 Deposit money 50
 Deposit money to the card
-Withdraw money 100000
+Withdraw money 10000
 Turn off the ATM
 
