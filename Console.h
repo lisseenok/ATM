@@ -17,15 +17,14 @@ public:
     Console(Base* parent, string name):Base(parent, name, 3){}
     void signalReadNewCommand(string &str){} // сигнал чтобы ридер считал новую строчку
     void signalPrintTurnOff(string &str){} // сигнал вывода выключения
-    void signalPrintReadyToWork(string &srt){} // сигнал для вывода "Ready to work"
-    void signalPrintEnterPin(string &srt){} // сигнал для вывода "Enter the PIN code"
-    void signalPrintSelectTheCommand(string &srt){} // сигнал для вывода "Select the command"
 
     void signalAddMoneyToDeposit(string &srt){} // сигнал ресиверу о внесении новой суммы
     void signalEndDeposit(string &srt){} // сигнал ресиверу, о том, что внесение денег окончено
     void signalWithdrawMoney(string &srt){} // сигнал для выдавателя денег
+    void signalIdentificate(string &srt){}
     //void signalIdentifyCard(string &srt){}
 
     void handlerText(string str); // обработчик команды
+    void handlerSuccessfulAuth(string str); // обработчик команды
 };
 #endif

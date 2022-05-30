@@ -15,8 +15,10 @@ public:
     void signalConsole(string &str){}
     void signalAddUser(string &str){}
     void signalAddMoney(string &str){}
+    void signalWithEnteredPin(string &str){}
 
     void handlerReadNewCommand(string str);
     void handlerSetUp(string str);
+    void handlerReadPin(string str);
 };
 #endif

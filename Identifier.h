@@ -10,7 +10,12 @@ class Identifier: public Base
 {
 public:
     Identifier(Base* parent, string name): Base(parent, name, 4){};
-    void signal(string &str);
-    void handler(string str);
+    void signalReadPin(string &str){}
+    void signalCheckPin(string &str){}
+    void signalSuccessfulAuth(string &str){}
+
+    void handlerIdentificate(string str);
+    void handlerWithEnteredPin(string str);
+    void handlerPinIsCorrect(string str);
 };
 #endif

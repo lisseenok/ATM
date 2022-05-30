@@ -23,3 +23,11 @@ void Reader::handlerSetUp(string str) {
 
     emitSignal((TYPE_SIGNAL)(&Reader::signalPrintMsg), "Ready to work");
 }
+
+void Reader::handlerReadPin(string str) {
+    string text;
+    getline(cin, text);
+    string pin = text.substr(9);
+    emitSignal((TYPE_SIGNAL)(&Reader::signalWithEnteredPin), pin + str);
+
+}

@@ -4,21 +4,14 @@
 void Console::handlerText(string str) {
     string command = str.substr(0, str.find(' '));
 
-    //cout << command << endl;
 
     if (command == "Identification")
     {
-        //emitSignal((TYPE_SIGNAL)(&Console::signalIdentifyCard));
         currentCard = str.substr(str.find(' ') + 1);
-        emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "Enter the PIN code");
+        emitSignal((TYPE_SIGNAL)(&Console::signalIdentificate), currentCard);
     }
 
-    else if (command == "PIN-code")
-    {
-        // дописать проверку верности пин кода
-        isAuth = true;
-        emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "Select the command");
-    } else
+    else
     {
         if (!isAuth)
         {
@@ -51,6 +44,10 @@ void Console::handlerText(string str) {
     }
 
     emitSignal((TYPE_SIGNAL)(&Console::signalReadNewCommand));
+}
+
+void Console::handlerSuccessfulAuth(string str) {
+    isAuth = true;
 }
 
 
