@@ -16,6 +16,7 @@ public:
     void signalAddUser(string &str){}
     void signalAddMoney(string &str){}
     void signalWithEnteredPin(string &str){}
+    void signalNotIsAuth(string &str){}
 
     void handlerReadNewCommand(string str);
     void handlerSetUp(string str);

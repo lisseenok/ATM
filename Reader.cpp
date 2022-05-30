@@ -27,6 +27,12 @@ void Reader::handlerSetUp(string str) {
 void Reader::handlerReadPin(string str) {
     string text;
     getline(cin, text);
+    if (text.substr(0, 8) != "PIN-code")
+    {
+        emitSignal((TYPE_SIGNAL)(&Reader::signalPrintMsg), "Ready to work");
+        emitSignal((TYPE_SIGNAL)(&Reader::signalNotIsAuth));
+        return;
+    }
     string pin = text.substr(9);
     emitSignal((TYPE_SIGNAL)(&Reader::signalWithEnteredPin), pin + str);
 

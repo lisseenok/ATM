@@ -67,6 +67,10 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Identifier::handlerWithEnteredPin);
     reader->setConnection(identifier, signal, handler);
 
+    signal = SIGNAL_D(Reader::signalNotIsAuth);
+    handler = HANDLER_D(Console::handlerNotIsAuth);
+    reader->setConnection(console, signal, handler);
+
     // console's signals
     signal = SIGNAL_D(Console::signalReadNewCommand);
     handler = HANDLER_D(Reader::handlerReadNewCommand);

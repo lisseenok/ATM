@@ -34,7 +34,11 @@ void Console::handlerText(string str) {
 
     }
 
-
+    if (command == "End")
+    {
+        emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "Ready to work");
+        // прекратить команду
+    }
 
     // обработка завершения работы банкомата
     if (command == "Turn")
@@ -48,6 +52,10 @@ void Console::handlerText(string str) {
 
 void Console::handlerSuccessfulAuth(string str) {
     isAuth = true;
+}
+
+void Console::handlerNotIsAuth(string str) {
+    isAuth = false;
 }
 
 

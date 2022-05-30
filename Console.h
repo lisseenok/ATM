@@ -26,5 +26,6 @@ public:
 
     void handlerText(string str); // обработчик команды
     void handlerSuccessfulAuth(string str); // обработчик команды
+    void handlerNotIsAuth(string str); // обработчик команды
 };
 #endif
