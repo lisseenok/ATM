@@ -10,13 +10,6 @@ void Console::handlerText(string str) {
         currentCard = str.substr(str.find(' ') + 1);
         emitSignal((TYPE_SIGNAL)(&Console::signalIdentificate), currentCard);
     }
-    else if (command == "End")
-    {
-        emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "Ready to work");
-        isAuth = false;
-        // прекратить команду
-    }
-
     // обработка завершения работы банкомата
     else if (command == "Turn")
     {
@@ -29,7 +22,13 @@ void Console::handlerText(string str) {
         if (!isAuth)
         {
             emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "Ready to work");
-        } else{
+        } else {
+            if (command == "End")
+            {
+                emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "Ready to work");
+                isAuth = false;
+                // прекратить команду
+            }
             if (command == "Deposit")
             {
                 if (str.substr(14, 2) == "to")

@@ -1,9 +1,10 @@
 #include "Receiver.h"
 
 void Receiver::handlerAddMoneyToDeposit(string str) {
-    if (stoi(str) % 100 == 0)
+    int sum = stoi(str);
+    if (sum % 100 == 0 && (sum == 5000 || sum == 2000 || sum == 1000 || sum == 500 || sum == 100))
     {
-        currentDeposit += stoi(str);
+        currentDeposit += sum;
         emitSignal((TYPE_SIGNAL)(&Receiver::signalPrintMsg), "The amount: " + to_string(currentDeposit));
     }
 }
