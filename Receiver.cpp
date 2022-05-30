@@ -4,7 +4,7 @@ void Receiver::handlerAddMoneyToDeposit(string str) {
     if (stoi(str) % 100 == 0)
     {
         currentDeposit += stoi(str);
-        emitSignal((TYPE_SIGNAL)(&Receiver::signalPrintMsg), "The amount: " + str);
+        emitSignal((TYPE_SIGNAL)(&Receiver::signalPrintMsg), "The amount: " + to_string(currentDeposit));
     }
 }
 

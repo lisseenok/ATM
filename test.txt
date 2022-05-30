@@ -1,23 +1,33 @@
-Ready to work
-Ready to work
-Enter the PIN code
-Select the command
-The amount: 1000
-The amount: 2000
-Card balance 47000
-Take the money: 5000 * 2 rub., 2000 * 0 rub., 1000 * 0 rub., 500 * 0 rub.,  100 * 0 rub.
-The amount: 1000
-Card balance 38000
-Ready to work
-Enter the PIN code
-Ready to work
-Ready to work
-Ready to work
-Ready to work
-Enter the PIN code
-Select the command
-Take the money: 5000 * 1 rub., 2000 * 1 rub., 1000 * 1 rub., 500 * 1 rub.,  100 * 0 rub.
-The amount: 500
-Card balance 7000
-Ready to work
+1001 2022 0021 0001 5001 15000
+1001 2022 0021 0002 5002 25000
+1001 2022 0021 0003 5003 35000
+1001 2022 0021 0004 5004 45000
+1001 2022 0021 0005 5005 55000
+End card loading
+5000 2000 1000 500 100
+End money loading
+Deposit money 1000
+Identification 1001 2022 0021 0004
+PIN-code 5004
+Deposit money 1000
+Deposit money 1000
+Deposit money 50
+Deposit money to the card
+Withdraw money 10000
+Deposit money 1000
+Deposit money to the card
+End the session
+Identification 1001 2022 0021 0003
+Deposit money 1000
+Deposit money to the card
+End the session
+Deposit money 1000
+Identification 1001 2022 0021 0001
+PIN-code 5001
+Withdraw money 8500
+Deposit money 1500
+Deposit money 500
+Deposit money to the card
+End the session
 Turn off the ATM
+
