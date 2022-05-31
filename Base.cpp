@@ -93,7 +93,8 @@ int Base::getState()
 void Base::printWithState(string s)
 {
     if (getState() != 0)
-        cout << endl << s << getName() << " is ready";
+    if (!parent) cout << s << getName() << " is ready";
+    else cout << endl << s << getName() << " is ready";
     else
         cout << endl << s << getName() << " is not ready";
     for (auto child : children)
@@ -242,4 +243,5 @@ string Base::getPath()
     }
     return "/" + path;
 }
+
 

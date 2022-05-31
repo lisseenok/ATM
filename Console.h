@@ -22,6 +22,7 @@ public:
     void signalEndDeposit(string &srt){} // сигнал ресиверу, о том, что внесение денег окончено
     void signalWithdrawMoney(string &srt){} // сигнал для выдавателя денег
     void signalIdentificate(string &srt){}
+    void signalShowTree(string &srt){}
     //void signalIdentifyCard(string &srt){}
 
     void handlerText(string str); // обработчик команды

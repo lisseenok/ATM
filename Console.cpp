@@ -10,6 +10,10 @@ void Console::handlerText(string str) {
         currentCard = str.substr(str.find(' ') + 1);
         emitSignal((TYPE_SIGNAL)(&Console::signalIdentificate), currentCard);
     }
+    else if (command == "SHOWTREE")
+    {
+        emitSignal((TYPE_SIGNAL)(&Console::signalShowTree));
+    }
     // обработка завершения работы банкомата
     else if (command == "Turn")
     {

@@ -24,7 +24,7 @@ class Application:public Base
     } money;
 
 public:
-    Application(): Base(nullptr, ""){};
+    Application(): Base(nullptr, "ATM"){};
     bool buildTreeObjects(); // построение иерархии
     int execApp();
     int getCurrentSum();
@@ -32,7 +32,6 @@ public:
 
     void signalReadNewCommand(string &str){} // сигнал ридеру прочесть новую строку
     void signalSetUp(string &str){} // сигнал ридеру для настройки банкомата
-    void signalReturnCardBalance(string &str){}
     void signalPinIsCorrect(string &str){}
 
     void handlerAddUser(string str);
@@ -41,5 +40,6 @@ public:
     void handlerReturnCardBalance(string str); // обработчик, передающий баланс карты
     void handlerWithdrawMoneyToApp(string str);
     void handlerCheckPin(string str);
+    void handlerShowTree(string str);
 };
 #endif

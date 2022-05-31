@@ -35,7 +35,6 @@ class Base
     int state;
     Base* current;
 
-    //int mode = 0; // 0 - обычный, 1 - режим авторизации, 2 - режим депозита
 public:
     Base(Base* parent, string name="", int number = 1);
     ~Base();
@@ -54,6 +53,7 @@ public:
     Base* getByPath(string path);
     void setCurrent(Base* current);
     Base* getCurrent();
+
 
     // new
     void setConnection(Base* c, TYPE_SIGNAL s, TYPE_HANDLER h);

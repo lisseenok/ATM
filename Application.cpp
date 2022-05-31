@@ -15,12 +15,12 @@ bool Application::buildTreeObjects()
     /**
      INITIALIZING OBJECTS
      */
-    Reader *reader = new Reader(this, "reader"); // Объект для чтения команд и данных
-    Console *console = new Console(this, "console"); // Объект пульта управления, для отработки нажатия кнопок (команд)
-    Identifier *identifier = new Identifier(this, "identifier"); // Объект, моделирующий устройства идентификации банковской карты
-    Receiver *receiver = new Receiver(this, "receiver"); // Объект, моделирующий устройства приема денег
-    Issuancer *issuancer = new Issuancer(this, "issuancer"); // Объект, моделирующий устройства выдачи денег
-    Printer *printer = new Printer(this, "printer"); // Объект для вывода состояния или результата операции банкомата на консоль.
+    Reader *reader = new Reader(this, "Reader"); // Объект для чтения команд и данных
+    Console *console = new Console(this, "Console"); // Объект пульта управления, для отработки нажатия кнопок (команд)
+    Identifier *identifier = new Identifier(this, "Identifier"); // Объект, моделирующий устройства идентификации банковской карты
+    Receiver *receiver = new Receiver(this, "Receiver"); // Объект, моделирующий устройства приема денег
+    Issuancer *issuancer = new Issuancer(this, "Issuancer"); // Объект, моделирующий устройства выдачи денег
+    Printer *printer = new Printer(this, "Printer"); // Объект для вывода состояния или результата операции банкомата на консоль.
 
     /**
      SETTING CONNECTIONS
@@ -99,6 +99,10 @@ bool Application::buildTreeObjects()
     signal = SIGNAL_D(Console::signalIdentificate);
     handler = HANDLER_D(Identifier::handlerIdentificate);
     console->setConnection(identifier, signal, handler);
+
+    signal = SIGNAL_D(Console::signalShowTree);
+    handler = HANDLER_D(Application::handlerShowTree);
+    console->setConnection(this, signal, handler);
 
 
     // receiver's signals
@@ -242,26 +246,33 @@ void Application::handlerWithdrawMoneyToApp(string str) {
             sum -= 100;
             withdrawMoney[4] += 1;
         }
-    }
-    if (money.amountOf5000 < withdrawMoney[0] || money.amountOf2000 < withdrawMoney[1] || money.amountOf1000 < withdrawMoney[2] || money.amountOf500 < withdrawMoney[3] || money.amountOf100 < withdrawMoney[4])
-    {
-        emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "There is not enough money in the ATM");
-    } else
-    {
-        emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "Take the money: 5000 * " + to_string(withdrawMoney[0]) + " rub., 2000 * " + to_string(withdrawMoney[1]) + " rub., 1000 * " + to_string(withdrawMoney[2])+ " rub., 500 * " + to_string(withdrawMoney[3])+ " rub.,  100 * " + to_string(withdrawMoney[4]) + " rub.");
-        for (int i = 0; i < users.size(); ++i) {
-            if (users[i].card == card)
-            {
-                users[i].balance -= tmpSum;
-            }
+        else
+        {
+            emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "There is not enough money in the ATM");
+            return;
         }
     }
+    if (money.amountOf5000 < withdrawMoney[0] || money.amountOf2000 < withdrawMoney[1] || money.amountOf1000 < withdrawMoney[2] || money.amountOf500 < withdrawMoney[3] || money.amountOf100 < withdrawMoney[4]) {
+        emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "There is not enough money in the ATM");
+        return;
+    }
+    // выводим сообщение
+    emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "Take the money: 5000 * " + to_string(withdrawMoney[0]) + " rub., 2000 * " + to_string(withdrawMoney[1]) + " rub., 1000 * " + to_string(withdrawMoney[2])+ " rub., 500 * " + to_string(withdrawMoney[3])+ " rub.,  100 * " + to_string(withdrawMoney[4]) + " rub.");
+    // вычитаем с баланса
+    for (int i = 0; i < users.size(); ++i) {
+        if (users[i].card == card)
+        {
+            users[i].balance -= tmpSum;
+        }
+    }
+
 }
 
 int Application::getCurrentSum() {
     /**
      метод, возвращающий текущую сумму денег в банкомате
      */
+
     return money.amountOf100 * 100 + money.amountOf500 * 500 + money.amountOf1000 * 1000 + money.amountOf2000 * 2000 + money.amountOf5000 * 5000;
 }
 
@@ -274,6 +285,11 @@ void Application::handlerCheckPin(string str) {
             if (users[i].pin == pin) emitSignal((TYPE_SIGNAL)(&Application::signalPinIsCorrect));
         }
     }
+}
+
+void Application::handlerShowTree(string str) {
+    printWithState("");
+    cout << endl;
 }
 
 

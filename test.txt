@@ -29,5 +29,6 @@ Deposit money 1500
 Deposit money 500
 Deposit money to the card
 End the session
+SHOWTREE
 Turn off the ATM
 
