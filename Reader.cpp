@@ -4,36 +4,34 @@ void Reader::handlerReadNewCommand(string str) {
     string text;
     getline(cin, text);
     // передаем сигнал пульту управления
-    emitSignal((TYPE_SIGNAL)(&Reader::signalConsole), text);
+    emitSignal((TYPE_SIGNAL) (&Reader::signalConsole), text);
 }
 
 void Reader::handlerSetUp(string str) {
     string text;
-    while (true)
-    {
+    while (true) {
         getline(cin, text);
         if (text == "End card loading") break;
-        emitSignal((TYPE_SIGNAL)(&Reader::signalAddUser), text);
+        emitSignal((TYPE_SIGNAL) (&Reader::signalAddUser), text);
     }
 
     getline(cin, text);
-    emitSignal((TYPE_SIGNAL)(&Reader::signalAddMoney), text);
+    emitSignal((TYPE_SIGNAL) (&Reader::signalAddMoney), text);
 
     getline(cin, text);
 
-    emitSignal((TYPE_SIGNAL)(&Reader::signalPrintMsg), "Ready to work");
+    emitSignal((TYPE_SIGNAL) (&Reader::signalPrintMsg), "Ready to work");
 }
 
 void Reader::handlerReadPin(string str) {
     string text;
     getline(cin, text);
-    if (text.substr(0, 8) != "PIN-code")
-    {
-        emitSignal((TYPE_SIGNAL)(&Reader::signalPrintMsg), "Ready to work");
-        emitSignal((TYPE_SIGNAL)(&Reader::signalNotIsAuth));
+    if (text.substr(0, 8) != "PIN-code") {
+        emitSignal((TYPE_SIGNAL) (&Reader::signalPrintMsg), "Ready to work");
+        emitSignal((TYPE_SIGNAL) (&Reader::signalNotIsAuth));
         return;
     }
     string pin = text.substr(9);
-    emitSignal((TYPE_SIGNAL)(&Reader::signalWithEnteredPin), pin + str);
+    emitSignal((TYPE_SIGNAL) (&Reader::signalWithEnteredPin), pin + str);
 
 }

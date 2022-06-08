@@ -5,52 +5,39 @@ void Console::handlerText(string str) {
     string command = str.substr(0, str.find(' '));
 
 
-    if (command == "Identification")
-    {
+    if (command == "Identification") {
         currentCard = str.substr(str.find(' ') + 1);
-        emitSignal((TYPE_SIGNAL)(&Console::signalIdentificate), currentCard);
+        emitSignal((TYPE_SIGNAL) (&Console::signalIdentificate), currentCard);
+    } else if (command == "SHOWTREE") {
+        emitSignal((TYPE_SIGNAL) (&Console::signalShowTree));
     }
-    else if (command == "SHOWTREE")
-    {
-        emitSignal((TYPE_SIGNAL)(&Console::signalShowTree));
-    }
-    // обработка завершения работы банкомата
-    else if (command == "Turn")
-    {
-        emitSignal((TYPE_SIGNAL)(&Console::signalPrintTurnOff));
+        // обработка завершения работы банкомата
+    else if (command == "Turn") {
+        emitSignal((TYPE_SIGNAL) (&Console::signalPrintTurnOff));
         return;
-    }
-
-    else
-    {
-        if (!isAuth)
-        {
-            emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "Ready to work");
+    } else {
+        if (!isAuth) {
+            emitSignal((TYPE_SIGNAL) (&Console::signalPrintMsg), "Ready to work");
         } else {
-            if (command == "End")
-            {
-                emitSignal((TYPE_SIGNAL)(&Console::signalPrintMsg), "Ready to work");
+            if (command == "End") {
+                emitSignal((TYPE_SIGNAL) (&Console::signalPrintMsg), "Ready to work");
                 isAuth = false;
                 // прекратить команду
             }
-            if (command == "Deposit")
-            {
-                if (str.substr(14, 2) == "to")
-                {
-                    emitSignal((TYPE_SIGNAL)(&Console::signalEndDeposit), currentCard);
+            if (command == "Deposit") {
+                if (str.substr(14, 2) == "to") {
+                    emitSignal((TYPE_SIGNAL) (&Console::signalEndDeposit), currentCard);
                 } else {
-                    emitSignal((TYPE_SIGNAL)(&Console::signalAddMoneyToDeposit), str.substr(14));
+                    emitSignal((TYPE_SIGNAL) (&Console::signalAddMoneyToDeposit), str.substr(14));
                 }
-            }
-            else if (command == "Withdraw")
-            {
-                emitSignal((TYPE_SIGNAL)(&Console::signalWithdrawMoney), currentCard + str.substr(15));
+            } else if (command == "Withdraw") {
+                emitSignal((TYPE_SIGNAL) (&Console::signalWithdrawMoney), currentCard + str.substr(15));
             }
         }
 
     }
 
-    emitSignal((TYPE_SIGNAL)(&Console::signalReadNewCommand));
+    emitSignal((TYPE_SIGNAL) (&Console::signalReadNewCommand));
 }
 
 void Console::handlerSuccessfulAuth(string str) {

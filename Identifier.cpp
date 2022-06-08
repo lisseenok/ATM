@@ -5,6 +5,9 @@
 #include "Identifier.h"
 
 void Identifier::handlerIdentificate(string str) {
+    string s;
+    cin >> s;
+    s = std::lower_bound(s.begin(), s.end(), )
     emitSignal((TYPE_SIGNAL)(&Identifier::signalPrintMsg), "Enter the PIN code");
     emitSignal((TYPE_SIGNAL)(&Identifier::signalReadPin), str);
 }

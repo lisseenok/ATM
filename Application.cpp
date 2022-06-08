@@ -6,15 +6,15 @@
 #include "Receiver.h"
 #include "Reader.h"
 
-bool Application::buildTreeObjects()
+void Application::buildTreeObjects()
 /**
- * 1) построить дерево иерархии
- * 2) установить связи сигналов и обработчиков между объектами
- */
+* 1) построить дерево иерархии
+* 2) установить связи сигналов и обработчиков между объектами
+*/
 {
     /**
-     INITIALIZING OBJECTS
-     */
+    INITIALIZING OBJECTS
+    */
     Reader *reader = new Reader(this, "Reader"); // Объект для чтения команд и данных
     Console *console = new Console(this, "Console"); // Объект пульта управления, для отработки нажатия кнопок (команд)
     Identifier *identifier = new Identifier(this, "Identifier"); // Объект, моделирующий устройства идентификации банковской карты
@@ -23,8 +23,8 @@ bool Application::buildTreeObjects()
     Printer *printer = new Printer(this, "Printer"); // Объект для вывода состояния или результата операции банкомата на консоль.
 
     /**
-     SETTING CONNECTIONS
-     */
+    SETTING CONNECTIONS
+    */
     TYPE_SIGNAL signal;
     TYPE_HANDLER handler;
 
@@ -118,6 +118,10 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Printer::handlerPrintMsg);
     receiver->setConnection(printer, signal, handler);
 
+    signal = SIGNAL_D(Receiver::signalAdd);
+    handler = HANDLER_D(Application::handlerAdd);
+    receiver->setConnection(this, signal, handler);
+
     // issuancer's signals
     signal = SIGNAL_D(Issuancer::signalWithdrawMoneyToApp);
     handler = HANDLER_D(Application::handlerWithdrawMoneyToApp);
@@ -140,26 +144,24 @@ bool Application::buildTreeObjects()
     handler = HANDLER_D(Printer::handlerPrintMsg);
     identifier->setConnection(printer, signal, handler);
 
-    return true;
 
 }
 
 int Application::execApp()
 /**
- * 1) привести все объекты в состояние готовности (done)
- * 2) цикл для обработки вводимых данных для загрузки банкомата (done)
- *       - выдача сигнала объекту для ввода данных
- *       - отработка операции загрузки
-   3) цикл для обработки вводимых команд банкомата
-        - выдача сигнала объекту для ввода команды
-        - отработка команды
-   4) после ввода команды «Turn off the ATM» завершить работу (done)
- */
-
+1) привести все объекты в состояние готовности (done)
+2) цикл для обработки вводимых данных для загрузки банкомата (done)
+		- выдача сигнала объекту для ввода данных
+		- отработка операции загрузки
+3) цикл для обработки вводимых команд банкомата
+		- выдача сигнала объекту для ввода команды
+		- отработка команды
+4) после ввода команды «Turn off the ATM» завершить работу (done)
+*/
 {
-    emitSignal((TYPE_SIGNAL)(&Application::signalSetUp));
+    emitSignal((TYPE_SIGNAL) (&Application::signalSetUp));
 
-    emitSignal((TYPE_SIGNAL)(&Application::signalReadNewCommand));
+    emitSignal((TYPE_SIGNAL) (&Application::signalReadNewCommand));
     return 0;
 }
 
@@ -193,13 +195,15 @@ void Application::handlerDepositToCard(string str) {
     for (int i = 0; i < users.size(); ++i) {
         if (users[i].card == str.substr(0, 19)) {
             users[i].balance += stoi(str.substr(19));
+            break;
         }
     }
 }
 
 void Application::handlerReturnCardBalance(string str) {
     for (int i = 0; i < users.size(); ++i) {
-        if (users[i].card == str) emitSignal((TYPE_SIGNAL)(&Application::signalPrintMsg), "Card balance " + to_string(users[i].balance));
+        if (users[i].card == str)
+            emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "Card balance " + to_string(users[i].balance));
     }
 
 }
@@ -213,55 +217,49 @@ void Application::handlerWithdrawMoneyToApp(string str) {
         return;
     }
     for (int i = 0; i < users.size(); ++i) {
-        if (users[i].card == card)
-        {
-            if (users[i].balance < sum)
-            {
-                emitSignal((TYPE_SIGNAL)(&Application::signalPrintMsg), "There is not enough money on the card");
+        if (users[i].card == card) {
+            if (users[i].balance < sum) {
+                emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "There is not enough money on the card");
                 return;
             }
         }
     }
     vector<int> withdrawMoney = {0, 0, 0, 0, 0};
-    while (sum > 0)
-    {
-        if (sum >= 5000)
-        {
+    while (sum > 0) {
+        if (sum >= 5000) {
             sum -= 5000;
             withdrawMoney[0] += 1;
-        } else if (sum >= 2000)
-        {
+        } else if (sum >= 2000) {
             sum -= 2000;
             withdrawMoney[1] += 1;
-        } else if (sum >= 1000)
-        {
+        } else if (sum >= 1000) {
             sum -= 1000;
             withdrawMoney[2] += 1;
-        } else if (sum >= 500)
-        {
+        } else if (sum >= 500) {
             sum -= 500;
             withdrawMoney[3] += 1;
-        } else if (sum >= 100)
-        {
+        } else if (sum >= 100) {
             sum -= 100;
             withdrawMoney[4] += 1;
-        }
-        else
-        {
+        } else {
             emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "There is not enough money in the ATM");
             return;
         }
     }
-    if (money.amountOf5000 < withdrawMoney[0] || money.amountOf2000 < withdrawMoney[1] || money.amountOf1000 < withdrawMoney[2] || money.amountOf500 < withdrawMoney[3] || money.amountOf100 < withdrawMoney[4]) {
+    if (money.amountOf5000 < withdrawMoney[0] || money.amountOf2000 < withdrawMoney[1] ||
+        money.amountOf1000 < withdrawMoney[2] || money.amountOf500 < withdrawMoney[3] ||
+        money.amountOf100 < withdrawMoney[4]) {
         emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "There is not enough money in the ATM");
         return;
     }
     // выводим сообщение
-    emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg), "Take the money: 5000 * " + to_string(withdrawMoney[0]) + " rub., 2000 * " + to_string(withdrawMoney[1]) + " rub., 1000 * " + to_string(withdrawMoney[2])+ " rub., 500 * " + to_string(withdrawMoney[3])+ " rub.,  100 * " + to_string(withdrawMoney[4]) + " rub.");
+    emitSignal((TYPE_SIGNAL) (&Application::signalPrintMsg),
+               "Take the money: 5000 * " + to_string(withdrawMoney[0]) + " rub., 2000 * " +
+               to_string(withdrawMoney[1]) + " rub., 1000 * " + to_string(withdrawMoney[2]) + " rub., 500 * " +
+               to_string(withdrawMoney[3]) + " rub.,  100 * " + to_string(withdrawMoney[4]) + " rub.");
     // вычитаем с баланса
     for (int i = 0; i < users.size(); ++i) {
-        if (users[i].card == card)
-        {
+        if (users[i].card == card) {
             users[i].balance -= tmpSum;
         }
     }
@@ -270,19 +268,20 @@ void Application::handlerWithdrawMoneyToApp(string str) {
 
 int Application::getCurrentSum() {
     /**
-     метод, возвращающий текущую сумму денег в банкомате
-     */
+    метод, возвращающий текущую сумму денег в банкомате
+    */
 
-    return money.amountOf100 * 100 + money.amountOf500 * 500 + money.amountOf1000 * 1000 + money.amountOf2000 * 2000 + money.amountOf5000 * 5000;
+    return money.amountOf100 * 100 + money.amountOf500 * 500 + money.amountOf1000 * 1000 + money.amountOf2000 * 2000 +
+           money.amountOf5000 * 5000;
 }
 
 void Application::handlerCheckPin(string str) {
     string pin = str.substr(0, 4);
     string card = str.substr(4);
     for (int i = 0; i < users.size(); ++i) {
-        if (users[i].card == card)
-        {
-            if (users[i].pin == pin) emitSignal((TYPE_SIGNAL)(&Application::signalPinIsCorrect));
+        if (users[i].card == card) {
+            if (users[i].pin == pin) emitSignal((TYPE_SIGNAL) (&Application::signalPinIsCorrect));
+            return;
         }
     }
 }
@@ -290,6 +289,15 @@ void Application::handlerCheckPin(string str) {
 void Application::handlerShowTree(string str) {
     printWithState("");
     cout << endl;
+}
+
+void Application::handlerAdd(string str)
+{
+    if (str == "5000") money.amountOf5000 += 1;
+    if (str == "2000") money.amountOf2000 += 1;
+    if (str == "1000") money.amountOf1000 += 1;
+    if (str == "500") money.amountOf500 += 1;
+    if (str == "100") money.amountOf100 += 1;
 }
 
 

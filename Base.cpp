@@ -1,60 +1,48 @@
 #include "Base.h"
 #include "Application.h"
 
-Base::~Base()
-{
+Base::~Base() {
     for (int i = 0; i < children.size(); ++i) delete children[i];
 }
 
-string Base::getName()
-{
+string Base::getName() {
     return name;
 }
 
-void Base::setName(string name)
-{
+void Base::setName(string name) {
     this->name = name;
 }
 
-Base* Base::getParent()
-{
+Base *Base::getParent() {
     return parent;
 }
 
-void Base::setParent(Base* newParent)
-{
-    if (parent)
-    {
-        for (int i = 0; i < parent->children.size(); ++i)
-        {
+void Base::setParent(Base *newParent) {
+    if (parent) {
+        for (int i = 0; i < parent->children.size(); ++i) {
             if (parent->children[i] == this) parent->children.erase(parent->children.begin() + i);
         }
     }
     // меняем себе родителя и добавляем себя в список детей нового родителя
     parent = newParent;
-    if (parent)
-    {
+    if (parent) {
         parent->children.push_back(this);
     }
 }
 
 
-void Base::print(string s)
-{
+void Base::print(string s) {
     cout << endl << s << getName();
-    for (auto child : children)
+    for (auto child: children)
         child->print(s + "    ");
 
 }
 
-Base* Base::search(string name)
-{
+Base *Base::search(string name) {
     if (this->name == name)
         return this;
-    if (!this->children.empty())
-    {
-        for (auto ptrChild : this->children)
-        {
+    if (!this->children.empty()) {
+        for (auto ptrChild: this->children) {
             auto result = ptrChild->search(name);
             if (result)
                 return result;
@@ -63,60 +51,50 @@ Base* Base::search(string name)
     return nullptr;
 }
 
-bool Base::setState(int s)
-{
-    if (this->parent == nullptr)
-    {
+bool Base::setState(int s) {
+    if (this->parent == nullptr) {
         this->state = s;
         return true;
     }
-    if (parent->state == 0 && s != 0)
-    {
+    if (parent->state == 0 && s != 0) {
         return false;
     }
     state = s;
-    if (state == 0)
-    {
-        for (int i = 0; i < children.size(); ++i)
-        {
+    if (state == 0) {
+        for (int i = 0; i < children.size(); ++i) {
             children[i]->setState(0);
         }
     }
     return true;
 }
 
-int Base::getState()
-{
+int Base::getState() {
     return state;
 }
 
-void Base::printWithState(string s)
-{
+void Base::printWithState(string s) {
     if (getState() != 0)
-    if (!parent) cout << s << getName() << " is ready";
-    else cout << endl << s << getName() << " is ready";
+        if (!parent) cout << s << getName() << " is ready";
+        else cout << endl << s << getName() << " is ready";
     else
         cout << endl << s << getName() << " is not ready";
-    for (auto child : children)
+    for (auto child: children)
         child->printWithState(s + "    ");
 }
 
-// новые или измененные методы
 
-Base::Base(Base* parent, string name, int number)
-{
+Base::Base(Base *parent, string name, int number) {
     this->number = number;
     this->name = name;
     this->parent = parent;
-    current=this;
+    current = this;
     state = 1;
-    if (parent){
+    if (parent) {
         parent->children.push_back(this);
     }
 }
 
-Base* Base::getByPath(string path)
-{
+Base *Base::getByPath(string path) {
     string name;
     int posOfSlash;
 
@@ -128,8 +106,7 @@ Base* Base::getByPath(string path)
         // текущий объект
         return current;
 
-    else if (path.substr(0, 2) == "//")
-    {
+    else if (path.substr(0, 2) == "//") {
         // ищем объект по уникальному имени от головного (можно использовать ранееописанный метод поиска по имени)
         name = path.substr(2);
         return search(name);
@@ -138,33 +115,28 @@ Base* Base::getByPath(string path)
     // позиция слеша
     // S.find(str, pos = 0) - искать первое входение строки str начиная с позиции pos.
     posOfSlash = path.find('/', 1);
-    if (path[0] == '/')
-    {
+    if (path[0] == '/') {
         if (posOfSlash != -1)
             // если есть слеши кроме первого
         {
             // выделяем имя
             name = path.substr(1, posOfSlash - 1);
             // проходимся по детям
-            for (auto childPtr : this->children)
-            {
+            for (auto childPtr: this->children) {
                 // если среди них есть ребенок с таким именем
-                if (childPtr->getName() == name)
-                {
+                if (childPtr->getName() == name) {
                     // рекурсивно возвращаем (для следующего)
                     return childPtr->getByPath(path.substr(posOfSlash));
                 }
             }
-        }
-        else
+        } else
             // если слеш только в начале
         {
             name = path.substr(1);
             // извлекли имя
 
             // ищем нужного среди детей
-            for (auto childPtr : this->children)
-            {
+            for (auto childPtr: this->children) {
                 if (childPtr->getName() == name)
                     return childPtr;
             }
@@ -178,28 +150,26 @@ Base* Base::getByPath(string path)
 
 }
 
-void Base::setCurrent(Base* current)
-{
+void Base::setCurrent(Base *current) {
     this->current = current;
 }
-Base* Base::getCurrent()
-{
+
+Base *Base::getCurrent() {
     return current;
 }
 
 // new
 
-void Base::setConnection(Base* c, TYPE_SIGNAL s, TYPE_HANDLER h)
+void Base::setConnection(Base *c, TYPE_SIGNAL s, TYPE_HANDLER h)
 // установка связи
 {
     connections.push_back(new Connection(c, s, h));
 }
 
-void Base::deleteConnection(Base* c, TYPE_SIGNAL s, TYPE_HANDLER h)
+void Base::deleteConnection(Base *c, TYPE_SIGNAL s, TYPE_HANDLER h)
 // удаление связи
 {
-    for (int i = 0; i < connections.size(); ++i)
-    {
+    for (int i = 0; i < connections.size(); ++i) {
         if (connections[i]->connected == c && connections[i]->signal == s && connections[i]->handler == h)
             connections.erase(connections.begin() + i);
     }
@@ -213,21 +183,17 @@ void Base::emitSignal(TYPE_SIGNAL s, string str)
 
     // отправляем сигнал
     (this->*s)(str);
-    for (int i = 0; i < connections.size(); ++i)
-    {
-        if (connections[i]->signal == s)
-        {
+    for (int i = 0; i < connections.size(); ++i) {
+        if (connections[i]->signal == s) {
             // получаем сигнал
             if (connections[i]->connected->state != 0) (connections[i]->connected->*connections[i]->handler)(str);
         }
     }
 }
 
-int Base::getNumber()
-{
+int Base::getNumber() {
     return number;
 }
-
 
 
 string Base::getPath()
@@ -235,9 +201,8 @@ string Base::getPath()
 {
     if (!parent) return "/";
     string path = getName();
-    Base* ptr = parent;
-    while (ptr->getParent())
-    {
+    Base *ptr = parent;
+    while (ptr->getParent()) {
         path = ptr->getName() + "/" + path;
         ptr = ptr->getParent();
     }
